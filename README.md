@@ -133,7 +133,11 @@ In this example, the additional complexity and computing power are not really wo
 #### 2.2.3 Decorator
 
 #### 2.2.4 Facade
+The facade pattern is a way to hide the complexity of a library/framework by providing an easier to use interface that only provides basic functionalities.
 
+I have not implemented any facade in the project by myself because all services and the iOS app is very simple and there was no need for it, but I've used the [`KeychainAccess` framework](https://github.com/kishikawakatsumi/KeychainAccess) which is a simple and easy implementation of the [iOS Keychain Services](https://developer.apple.com/documentation/security/keychain_services).
+
+Furthermore, I am using an API Gateway for several microservices in my backend and the client (iOS App) has only one endpoint (https://api.engelbrink.dev) where it sends requests to. The API Gateway acts as a facade for an external system in this case because it hides the complexity of multiple services by providing only a simple interface for the iOS app. [This article](https://freecontent.manning.com/the-api-gateway-pattern/) describes this a little bit more.
 
 ### 2.3 Behavioral patterns
 #### 2.3.1 Command
