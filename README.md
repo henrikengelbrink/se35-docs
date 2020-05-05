@@ -72,10 +72,12 @@ The services in my current project were very small and only had 2-3 entities so 
 <br/>
 
 ## 2. Design patterns
-Design patterns in software development are standardized solutions for common problems that occur during the development process. They help to structure your code and make it easier to maintain because you reduce replicated code.
+Design patterns in software development are standardized solutions for common problems that occur during the development process. They help to structure your code and make it easier to maintain because you reduce replicated code. 
+
+I have implemented most of these patterns in the [device-service repository](https://github.com/henrikengelbrink/se35-device-service).
 
 ### 2.1 Creational patterns
-Creational patterns provide functionalities and solutions to create objects. Most of these patterns are implemented in the [device-service repository](https://github.com/henrikengelbrink/se35-device-service).
+Creational patterns provide functionalities and solutions to create objects.
 
 #### 2.1.1 Factory Method
 The Factory Method pattern uses a single method to create objects of a specific interface instead of using the constructor directly. If you add another class that implements the interface at a later point of the project you don't need to change code in a lot of places but you only have to update the factory method to create objects of this new class. The factory method itself determines the specific class to create during the runtime.
@@ -122,8 +124,16 @@ In my project, I have used this pattern to show the water usage during a washing
 <br/>
 
 #### 2.2.2 Flyweight
+The idea of the flyweight pattern is to reduce the RAM usage of an application by removing duplicated/repeating attributes from a set of objects that share specific attributes.
+
+I implemented a flyweight for theoretical purposes in this project. [By default, I was loading the entire `WashingMachineCycle` object from the database into the application](https://github.com/henrikengelbrink/se35-device-service/blob/master/src/main/kotlin/se35/device/service/repositories/WashingCycleRepository.kt#L13). The `WashingMachineCycle` class has a property called [`machine`](https://github.com/henrikengelbrink/se35-device-service/blob/master/src/main/kotlin/se35/device/service/models/entities/WashingCycle.kt#L6) which is automatically mapped by the ORM. This means in case I am loading millions of `WashingMachineCycle` objects for a specific machine this machine attribute is repeating in every object which means additional RAM usage. To reduce this RAM usage, I implemented the [`WashingCycleFlyweight` interface](https://github.com/henrikengelbrink/se35-device-service/blob/master/src/main/kotlin/se35/device/service/models/projection/WashingCycleFlyweight.kt) which is a projection, it means the ORM only loads specific fields from the database table. In this case, I am only loading the `id`, `start`, `end` and `waterUsage` and the machine is not loaded anymore, because I am [caching the machine object at the point where I am loading all the washing cycles for this specific machine](https://github.com/henrikengelbrink/se35-device-service/blob/master/src/main/kotlin/se35/device/service/services/WashingMachineService.kt#L15).
+
+In this example, the additional complexity and computing power are not really worth using the flyweight because there will be never the case that one specific machine will have thousands of washing cycles, so this flyweight implementation is only meant for demo purposes.
+
 #### 2.2.3 Decorator
+
 #### 2.2.4 Facade
+
 
 ### 2.3 Behavioral patterns
 #### 2.3.1 Command
