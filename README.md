@@ -47,7 +47,7 @@ The following package diagram shows a template of how I tried to structure all m
 <br/>
 
 ### 1.4 UML Class Diagram
-TODO 
+TODO
 <br/>
 
 ### 1.5 Custom diagrams
@@ -71,4 +71,34 @@ The services in my current project were very small and only had 2-3 entities so 
 ![ERD_Keeet.png](diagrams/ERD_Keeet.png "")
 <br/>
 
-## 2. Design Patterns
+## 2. Design patterns
+Design patterns in software development are standardized solutions for common problems that occur during the development process. They help to structure your code and make it easier to maintain because you reduce replicated code.
+
+### 2.1 Creational patterns
+Creational patterns provide functionalities and solutions to create objects.
+
+#### 2.1.1 Factory Method
+The Factory Method pattern uses a single method to create objects of a specific interface instead of using the constructor directly. If you add another class that implements the interface at a later point of the project you don't need to change code in a lot of places but you only have to update the factory method to create objects of this new class. The factory method itself determines the specific class to create during the runtime.
+
+I've used this pattern during the [JSON deserialization for the CreateDeviceDTO interface](https://github.com/henrikengelbrink/se35-device-service/blob/master/src/main/kotlin/se35/device/service/utils/CreateDeviceDTODeserializer.kt). Depending on the type of the incoming JSON body I am creating either an object of the class `CreateWashingMachineDTO` or of the class `CreateDryerDTO`. If I want to add an additional DeviceType later I only have to implement the Interface `CreateDeviceDTO` and add the constructor for this new class in the deserialize method of the `CreateDeviceDTODeserializer` class.
+
+#### 2.1.2 Abstract Factory
+This pattern provides the functionality to create objects of similar classes without using the concrete class directly. The idea is to use an interface that defines the creation methods and the implemented classes need to implement the specific logic depending on their use-case. This decision in which specific implementation should be used is taken during the runtime.
+
+In my case, I am using this pattern to build a converter that converts database objects of the class `Device` into their data transfer objects (DTO's) and vice versa. The interface [`DeviceDTOEntityConverter`](https://github.com/henrikengelbrink/se35-device-service/blob/master/src/main/kotlin/se35/device/service/utils/DeviceDTOEntityConverter.kt) defines the converting methods which are necessary and the implementations ([`WashingMachineDTOEntityConverter`](https://github.com/henrikengelbrink/se35-device-service/blob/master/src/main/kotlin/se35/device/service/utils/WashingMachineDTOEntityConverter.kt), [`DryerDTOEntityConverter`](https://github.com/henrikengelbrink/se35-device-service/blob/master/src/main/kotlin/se35/device/service/utils/DryerDTOEntityConverter.kt)) providing the actual logic for each device. Through this approach, it is possible to define which attributes of the database model should be contained in the DTO and we have a standardized interface for all `Devices` how to convert them.
+
+#### 2.1.3 Builder
+#### 2.1.4 Prototype
+#### 2.1.5 Dependency Injection
+
+### 2.2 Structural patterns
+#### 2.2.1 Adapter
+#### 2.2.2 Flyweight
+#### 2.2.3 Decorator
+#### 2.2.4 Facade
+
+### 2.3 Behavioral patterns
+#### 2.3.1 Command
+#### 2.3.2 Observer
+#### 2.3.3 State
+#### 2.3.4 Visitor
