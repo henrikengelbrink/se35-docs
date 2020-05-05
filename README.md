@@ -90,11 +90,27 @@ In my case, I am using this pattern to build a converter that converts database 
 <br/>
 
 #### 2.1.3 Builder
+The builder pattern is used to create objects that can be created in different types. Normally you can overload the constructor of the class to achieve the same functionality but this can become quite messy at some point.
 
+To show a basic implementation of the builder pattern I've implemented the [`Subscription`](https://github.com/henrikengelbrink/se35-device-service/blob/master/src/main/kotlin/se35/device/service/models/entities/Subscription.kt) class in my project but this class is not actively used at the moment.
 <br/>
 
 #### 2.1.4 Prototype
-#### 2.1.5 Dependency Injection
+The intend of the prototype pattern is to create objects from already existing objects without caring about their class.
+
+Kotlin offers the `Cloneable` interface for this which implements exactly this functionality. I have [used this interface](https://github.com/henrikengelbrink/se35-device-service/blob/master/src/main/kotlin/se35/device/service/models/interfaces/Device.kt#L6) for the `Device` interface and [implemented the clone method](https://github.com/henrikengelbrink/se35-device-service/blob/master/src/main/kotlin/se35/device/service/models/interfaces/Device.kt#L11-L14) which clones the existing object and generates a new UUID for it.
+<br/>
+
+#### 2.1.5 Singleton
+The singleton pattern lets you create a class and ensure that only one instance of this class is created and used globally.
+
+This pattern is implemented natively in Kotlin with the `object` data type. I have used this pattern for the [`DateExtension` class](https://github.com/henrikengelbrink/se35-device-service/blob/master/src/main/kotlin/se35/device/service/utils/DateExtension.kt)
+<br/>
+
+#### 2.1.6 Dependency Injection
+TBD.
+<br/>
+
 
 ### 2.2 Structural patterns
 #### 2.2.1 Adapter
