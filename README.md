@@ -113,7 +113,14 @@ TBD.
 
 
 ### 2.2 Structural patterns
+Structural patterns help to arrange the structure between objects and their classes by keeping them flexible and easy to expand/maintain.
+
 #### 2.2.1 Adapter
+This pattern allows interaction between objects that are not based on the same interface.
+
+In my project, I have used this pattern to show the water usage during a washing cycle of a washing machine. This value is stored in the database for every washing cycle and I am using liters as a unit of measurement for this. This works for all customers in Europe but US customers are not familiar with liters but they are using gallons so there is a need to deliver the value to them in a different unit of measurement. Therefore I have implemented the [`WaterUsage` interface](https://github.com/henrikengelbrink/se35-device-service/blob/master/src/main/kotlin/se35/device/service/models/interfaces/WaterUsage.kt) and its subclasses [`WaterUsageLiter`](https://github.com/henrikengelbrink/se35-device-service/blob/master/src/main/kotlin/se35/device/service/models/entities/WaterUsageLiter.kt) and [`WaterUsageGallon`](https://github.com/henrikengelbrink/se35-device-service/blob/master/src/main/kotlin/se35/device/service/models/entities/WaterUsageGallon.kt). These classes contain the functionality to convert the water usage between liter and gallons.
+<br/>
+
 #### 2.2.2 Flyweight
 #### 2.2.3 Decorator
 #### 2.2.4 Facade
