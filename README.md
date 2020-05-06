@@ -304,5 +304,7 @@ newsletter.publish("Hello world !", "Lorem ipsum dori it")
 
 I have not implemented this in my current project but I am using the MQTT protocol which is based on the publish-subscribe pattern. The publish-subscribe pattern is a combination of the observer pattern and the broker pattern. In contrast to the observer pattern, the publish-subscribe pattern is based on the idea that the two objects are not directly communicating to each other but there is some kind of server(broker) in the middle that handles the subscribers and publishers.
 
+Another area where this pattern is used intensively is the iOS app development. The iOS SDK offers the `NSNotificationCenter` and `NSNotification` classes which are an existing implementation of this pattern and they make it very easy to change multiple GUI elements based on different events.
+
 #### 2.3.3 State
 #### 2.3.4 Visitor
