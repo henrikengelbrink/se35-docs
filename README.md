@@ -129,15 +129,80 @@ The idea of the flyweight pattern is to reduce the RAM usage of an application b
 I implemented a flyweight for theoretical purposes in this project. [By default, I was loading the entire `WashingMachineCycle` object from the database into the application](https://github.com/henrikengelbrink/se35-device-service/blob/master/src/main/kotlin/se35/device/service/repositories/WashingCycleRepository.kt#L13). The `WashingMachineCycle` class has a property called [`machine`](https://github.com/henrikengelbrink/se35-device-service/blob/master/src/main/kotlin/se35/device/service/models/entities/WashingCycle.kt#L6) which is automatically mapped by the ORM. This means in case I am loading millions of `WashingMachineCycle` objects for a specific machine this machine attribute is repeating in every object which means additional RAM usage. To reduce this RAM usage, I implemented the [`WashingCycleFlyweight` interface](https://github.com/henrikengelbrink/se35-device-service/blob/master/src/main/kotlin/se35/device/service/models/projection/WashingCycleFlyweight.kt) which is a projection, it means the ORM only loads specific fields from the database table. In this case, I am only loading the `id`, `start`, `end` and `waterUsage` and the machine is not loaded anymore, because I am [caching the machine object at the point where I am loading all the washing cycles for this specific machine](https://github.com/henrikengelbrink/se35-device-service/blob/master/src/main/kotlin/se35/device/service/services/WashingMachineService.kt#L15).
 
 In this example, the additional complexity and computing power are not really worth using the flyweight because there will be never the case that one specific machine will have thousands of washing cycles, so this flyweight implementation is only meant for demo purposes.
+<br/>
 
-#### 2.2.3 Decorator
-
-#### 2.2.4 Facade
+#### 2.2.3 Facade
 The facade pattern is a way to hide the complexity of a library/framework by providing an easier to use interface that only provides basic functionalities.
 
 I have not implemented any facade in the project by myself because all services and the iOS app is very simple and there was no need for it, but I've used the [`KeychainAccess` framework](https://github.com/kishikawakatsumi/KeychainAccess) which is a simple and easy implementation of the [iOS Keychain Services](https://developer.apple.com/documentation/security/keychain_services).
 
 Furthermore, I am using an API Gateway for several microservices in my backend and the client (iOS App) has only one endpoint (https://api.engelbrink.dev) where it sends requests to. The API Gateway acts as a facade for an external system in this case because it hides the complexity of multiple services by providing only a simple interface for the iOS app. [This article](https://freecontent.manning.com/the-api-gateway-pattern/) describes this a little bit more.
+<br/>
+
+#### 2.2.4 Decorator
+The decorator pattern offers the possibility to update or expand the functionality of objects during the runtime of the application. This is done by implementing a wrapper class around the object which changes the existing functionality.
+
+Unfortunately, there were no uses cases for this pattern in my project but I have implemented a trivial example version of it to show how this pattern is working:
+
+```
+interface Product {
+    val id: UUID
+    ...
+    fun executeThat()
+    fun doThis()
+    fun handleStuff()
+}
+
+class ProductA: Product {
+
+    override val id = UUID.randomUUID()
+
+    override fun executeThat() {
+        print("executeThat for ProductA")
+    }
+
+    override fun doThis() {
+        print("doThis for ProductA")
+    }
+
+    override fun handleStuff() {
+        print("handleStuff for ProductA")
+    }
+
+}
+```
+
+Now we want to create a `ProductB` which uses some of the functionalities of `ProductA` but it should also have some additional methods:
+```
+class ProductB(
+    val product: Product
+): Product by product {
+
+    override executeThat() {
+        println("Additional stuff executeThat in ProductB")
+        product.executeThat()
+    }
+
+    override fun doThis() {
+        print("total override of doThis of ProductA in ProductB")
+    }
+
+    fun additionalStuff() {
+        print("Do additional stuff of ProductB")
+    }
+
+}
+
+val productA = ProductA()
+val productB = ProductB(productA)
+
+productB.executeThat()
+productB.doThis()
+productB.handleStuff()
+productB.additionalStuff()
+
+```
+
 
 ### 2.3 Behavioral patterns
 #### 2.3.1 Command
