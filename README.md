@@ -207,7 +207,9 @@ productB.additionalStuff()
 The intention of behavioral patterns is to define specific ways of communication between different objects.
 
 #### 2.3.1 Command
-The command pattern is used to package specific workloads/tasks into one object that contains all the necessary information to fullfile this workload. Unfortunately, I have not used it during my project but I have implemented a class which is based on the command pattern and is able to upload images into a different cloud storages.
+The command pattern is used to package specific workloads/tasks into one object that contains all the necessary information to fulfill this workload.
+
+Unfortunately, I have not used it during my project but I have implemented a class which is based on the command pattern and is able to upload images into different cloud storage solutions:
 
 ```kotlin
 interface UploadCommand {
@@ -243,7 +245,7 @@ class StorageUploader {
 }
 ```
 
-The following code shows an example how this command pattern can be used:
+The following code shows an example of how this command pattern can be used:
 ```kotlin
 val uploader = StorageUploader()
 uploader.add(
@@ -262,5 +264,45 @@ uploader.start()
 ```
 
 #### 2.3.2 Observer
+The observer pattern is a pattern that provides multiple other objects the possibility to subscribe to specific events of another object.
+
+The following example shows use-case of this observer pattern:
+```kotlin
+class INewsletterListener {
+    fun receiveNewsletter(title: String, message: String)
+}
+
+class NewsletterListener: INewsletterListener {
+    fun receiveNewsletter(title: String, message: String) {
+        print("News - $title: \n$message)
+    }
+}
+
+class Newsletter {
+    private val listeners = mutableListOf<INewsletterListener>()
+
+    fun add(listener: INewsletterListener) {
+        listeners.add(listener)
+    }
+
+    fun publish(title: String, message: String) {
+        listeners.forEach {
+            it.receiveNewsletter(title, message)
+        }
+    }
+}
+
+val newsletter = Newsletter()
+
+val listener1 = NewsletterListener()
+newsletter.add(listener1)
+val listener2 = NewsletterListener()
+newsletter.add(listener2)
+
+newsletter.publish("Hello world !", "Lorem ipsum dori it")
+```
+
+I have not implemented this in my current project but I am using the MQTT protocol which is based on the publish-subscribe pattern. The publish-subscribe pattern is a combination of the observer pattern and the broker pattern. In contrast to the observer pattern, the publish-subscribe pattern is based on the idea that the two objects are not directly communicating to each other but there is some kind of server(broker) in the middle that handles the subscribers and publishers.
+
 #### 2.3.3 State
 #### 2.3.4 Visitor
