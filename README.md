@@ -144,7 +144,7 @@ The decorator pattern offers the possibility to update or expand the functionali
 
 Unfortunately, there were no uses cases for this pattern in my project but I have implemented a trivial example version of it to show how this pattern is working:
 
-```
+```kotlin
 interface Product {
     val id: UUID
     ...
@@ -173,7 +173,7 @@ class ProductA: Product {
 ```
 
 Now we want to create a `ProductB` which uses some of the functionalities of `ProductA` but it should also have some additional methods:
-```
+```kotlin
 class ProductB(
     val product: Product
 ): Product by product {
@@ -203,9 +203,64 @@ productB.additionalStuff()
 
 ```
 
-
 ### 2.3 Behavioral patterns
+The intention of behavioral patterns is to define specific ways of communication between different objects.
+
 #### 2.3.1 Command
+The command pattern is used to package specific workloads/tasks into one object that contains all the necessary information to fullfile this workload. Unfortunately, I have not used it during my project but I have implemented a class which is based on the command pattern and is able to upload images into a different cloud storages.
+
+```kotlin
+interface UploadCommand {
+    fun upload()
+}
+
+class AmazonS3Upload(val filePath: String, val bucketId: String): UploadCommand {
+    override fun upload() {
+        val fileData = FileHandle.read(filePath)
+        AWS.S3.upload(fileData, bucketId)
+    }
+}
+
+class GoogleFileStorageUpload(val filePath: String, val bucketName: String): UploadCommand {
+    override fun upload() {
+        val fileData = FileHandle.read(filePath)
+        val uploadHandle = Google.Storage.createUploadHandle(bucketName)
+        uploadHandle.upload(fileData)
+    }
+}
+
+class StorageUploader {
+    private val uploadQueue = mutableListOf<UploadCommand>()
+
+    fun add(uploadCommand: UploadCommand): StorageUploader = apply { uploadQueue.add(uploadCommand) }
+
+    fun start(): StorageUploader = apply { 
+        uploadQueue.forEach { 
+            it.upload() 
+        }
+    }
+
+}
+```
+
+The following code shows an example how this command pattern can be used:
+```kotlin
+val uploader = StorageUploader()
+uploader.add(
+    AmazonS3Upload(
+        filePath = "/tmp/index.html", 
+        bucketId = "aws-1234-resource-storage-x123"
+    )
+)
+uploader.add(
+    GoogleFileStorageUpload(
+        filePath = "/tmp/invoice.pdf", 
+        bucketName = "com.projects.henrik.123"
+    )
+)
+uploader.start()
+```
+
 #### 2.3.2 Observer
 #### 2.3.3 State
 #### 2.3.4 Visitor
